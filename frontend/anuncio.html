@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="shortcut icon" href="./assets/img/DN.png" type="image/x-icon" />
+  <link rel="stylesheet" href="./assets/css/anuncio.css">
+  <link rel="stylesheet" href="./assets/css/veiculos.css">
+  <link rel="stylesheet" href="./assets/css/fedback.css" />
+  <link rel="stylesheet" href="./assets/css/fedbackperfil.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="module" src="./assets/services/feedback.js" defer></script>
+  <title>DriveNShop</title>
+</head>
+<style>
+
+  .proposta {
+    position: relative;
+  }
+
+  .proposta-lock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    gap: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .proposta-lock i {
+    font-size: 3rem;
+  }
+
+  .proposta-lock a {
+    color: white;
+    text-decoration: none;
+    background-color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+  }
+
+  .proposta-lock a:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+  }
+</style>
+<body>
+  <div class="header">
+    <div class="center-header">
+      <a href="./index.html" class="arrow"><i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+  </div>
+  <main>
+    <div class="anuncio">
+      <div class="anuncio__header">
+        <img id="category" src="" />
+        <div class="anuncio__header__info">
+          <h1 id="preco"></h1>
+          <span id="tipo"></span>
+          <table>
+            <tr>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Ano</th>
+            </tr>
+            <tr>
+              <td id="marca"></td>
+              <td id="modelo"></td>
+              <td id="ano"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="anuncio__body">
+        <h2>Descrição</h2>
+        <p id="descricao"></p>
+        <h4 style="margin-top: 1rem;" id="localizacao"></h4>
+        <table style="margin-top: 3rem;">
+          <tr>
+            <th>Condição</th>
+            <th>Quilometragem</th>
+          </tr>
+          <tr>
+            <td id="condicao"></td>
+            <td id="quilometragem"></td>
+          </tr>
+        </table>
+      </div>
+      <hr>
+      <div class="feedback">
+        <h1>Vendedor</h1>
+        <div class="vendedor">
+          <img id="vendedor-img" />
+          <div class="info">
+            <h3 id="vendedor-name"></h3>
+            <i class="fa fa-star"> <span id="vendedor-feedback"></span></i>
+          </div>
+        </div>
+
+        <h2 style="margin-top: 4rem;">Avaliações</h2>
+
+        <div class="testimonials-container"></div>
+      </div>
+    </div>
+    <div class="proposta">
+      <div class="proposta-lock">
+        <i class="fa fa-lock"></i>
+        <h4>Faça Login para fazer uma proposta!</h4>
+        <a href="./assets/pages/login.html">Login</a>
+      </div>
+      <form id="post_proposta">
+        <h2>Faça uma proposta</h2>
+        <div class="inner__heading">
+          <div class="inner__title">Tipo de Proposta</div>
+          <div class="inner__input">
+            <select name="facing" id="tipo-proposta" required>
+              <option value="" selected disabled hidden>Selecionar</option>
+              <option value="0">Venda</option>
+              <option value="1">Troca</option>
+              <option value="2">Troca + Valor Adicional</option>
+            </select>
+          </div>
+        </div>
+        <div class="inner__heading" id="permuta" style="display: none;">
+          <div class="inner__title">Permuta</div>
+          <div class="inner__input">
+            <textarea minlength="10" required></textarea>
+          </div>
+        </div>
+        <div class="inner__heading" id="valor" style="display: none;">
+          <div class="inner__title">Valor</div>
+          <div class="inner__input">
+            <input type="text" mask="preco" maxlength="9" placeholder="R$ " required />
+          </div>
+        </div>
+        <div class="inner__heading">
+          <div class="inner__title">Telefone para Contato</div>
+          <div class="inner__input">
+            <input type="text" id="phone" mask="telefone" placeholder="(XX) XXXXX-XXXX" required />
+          </div>
+          <button type="submit">Enviar Proposta</button>
+      </form>
+    </div>
+  </main>
+  <div class="modal-feedback" style="display: none;">
+    <div class="container">
+      <span id="exit-feedback" class="close">&times;</span>
+      <div class="post">
+        <div class="text">Obrigado por nos avaliar!</div>
+        <div class="edit">EDITAR</div>
+      </div>
+      <div class="star-widget">
+        <input type="radio" name="rate" id="rate-5" value="5" />
+        <label for="rate-5" class="fas fa-star"></label>
+        <input type="radio" name="rate" id="rate-4" value="4" />
+        <label for="rate-4" class="fas fa-star"></label>
+        <input type="radio" name="rate" id="rate-3" value="3" />
+        <label for="rate-3" class="fas fa-star"></label>
+        <input type="radio" name="rate" id="rate-2" value="2" />
+        <label for="rate-2" class="fas fa-star"></label>
+        <input type="radio" name="rate" id="rate-1" value="1" />
+        <label for="rate-1" class="fas fa-star"></label>
+        <form id="feedbackForm">
+          <header></header>
+
+          <div class="title-selector">
+            <select id="title">
+              <option value="1">COMPRA</option>
+              <option value="0">TROCA</option>
+            </select>
+          </div>
+
+          <div class="textarea">
+            <textarea id="comment" cols="30" placeholder="Escrever Comentário..." maxlength="150"></textarea>
+          </div>
+          <div class="btn">
+            <button id="submit-feedback" type="submit">ENVIAR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    import { Marcas } from "./assets/enum/marcas.js";
+    import { Modelos } from "./assets/enum/modelos.js";
+    import { Estados } from "./assets/enum/estados.js";
+    import serviceVeiculo from "./assets/services/veiculo.js";
+    import serviceUser from "./assets/services/user.js";
+    import serviceFeedback from './assets/services/feedback.js';
+
+    const tipo = document.getElementById("tipo-proposta");
+    const permuta = document.getElementById("permuta");
+    const valor = document.getElementById("valor");
+    var vendedorId;
+
+    tipo.addEventListener("change", () => {
+      if (tipo.value === "0") {
+        permuta.style.display = "none";
+        permuta.value = "";
+        valor.style.display = "block";
+      }
+
+      if (tipo.value === "1") {
+        permuta.style.display = "block";
+        valor.style.display = "none";
+        valor.value = "";
+      }
+
+      if (tipo.value === "2") {
+        valor.style.display = "block";
+        permuta.style.display = "block";
+      }
+    });
+
+    $(document).ready(function () {
+      const veiculoId = window.location.search.split("?")[1];
+
+      function fetchAnuncio(id) {
+        serviceVeiculo
+          .getVeiculo(id)
+          .then(function (data) {
+            renderAnuncio(data);
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar anuncios:", err);
+          });
+      }
+
+      function renderAnuncio(veiculo) {
+        document.getElementById("category").src = `./assets/img/veiculos/${veiculo.categoria}.png`;
+        document.getElementById("preco").textContent = `R$ ${veiculo.preco},00`;
+        document.getElementById("tipo").textContent = veiculo.tipo ? "Aceito Troca" : "";
+        document.getElementById("marca").textContent = Marcas[veiculo.marca];
+        document.getElementById("modelo").textContent = Modelos[veiculo.modelo];
+        document.getElementById("ano").textContent = veiculo.ano;
+
+        document.getElementById("descricao").textContent = veiculo.descricao;
+        document.getElementById("localizacao").innerHTML = `<i class="fa fa-location-dot"></i> ${Estados[veiculo.localizacao]}`;
+        document.getElementById("condicao").textContent = veiculo.condicao ? "Usado" : "Novo";
+        document.getElementById("quilometragem").textContent = `${veiculo.quilometragem} km`;
+
+        vendedorId = veiculo.id_usuario;
+
+        serviceUser
+          .getUser(vendedorId)
+          .then(function (user) {
+            document.getElementById("vendedor-img").src = user.avatar;
+            document.getElementById("vendedor-name").textContent = user.nome;
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar usuario:", err);
+          });
+      }
+
+      fetchAnuncio(veiculoId);
+    });
+
+    $(document).ready(function () {
+      function fetchTestimonials() {
+        serviceUser.getUsers()
+          .then(users => {
+            serviceFeedback.getFeedbacks()
+              .then(function (data) {
+                renderTestimonials(data, users);
+              })
+              .catch(function (err) {
+                console.error("Erro ao buscar feedbacks:", err);
+              });
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar usuários:", err);
+          });
+      }
+
+      function renderTestimonials(feedbacks, users) {
+        const container = $('.testimonials-container');
+        const vendedorNome = document.getElementById("vendedor-name").textContent;
+
+        container.empty();
+
+        if (feedbacks.length === 0) {
+          container.append(`<p style="text-align: center; color: black ">Nenhuma avaliação disponível para ${vendedorNome}.</p>`);
+        } else {
+          let feedbackCount = 0;
+          let totalRating = 0;
+
+          feedbacks.forEach(feedback => {
+            let userName, avatar;
+
+            users.forEach(user => {
+              if (feedback.id_avaliador === user.id) {
+                userName = user.nome;
+                avatar = user.avatar;
+              }
+            });
+
+            const testimonialCard = `
+            <div class="item testimonial-card">
+              <div class="test-card-body">
+                <div class="quote">
+                  <i class="fa fa-quote-left"></i>
+                  <h2>${feedback.tipo_transacao ? "Compra" : "Troca"} de veiculo...</h2>
+                </div>
+                <p>${feedback.comentario}</p>
+                <div class="ratings">${getStars(feedback.avaliacao)}</div>
+              </div>
+              <div class="profile">
+                <div class="profile-desc">
+                  <span>${userName}</span>
+                </div>
+              </div>
+            </div>`;
+
+            if (feedback.id_avaliado === vendedorId) {
+              container.append(testimonialCard);
+              totalRating += feedback.avaliacao;
+              feedbackCount++;
+            }
+          });
+
+          if (feedbackCount === 0) {
+            container.append(`<p style="text-align: center; color: black ">Nenhuma avaliação disponível para ${vendedorNome}.</p>`);
+            document.getElementById("vendedor-feedback").style.display = 'none';
+            document.querySelector(".vendedor .info i").style.display = 'none';
+          } else {
+            const averageRating = totalRating / feedbackCount;
+            const formattedRating = averageRating % 1 === 0 ? averageRating.toFixed(0) : averageRating.toFixed(1);
+            document.getElementById("vendedor-feedback").textContent = formattedRating;
+          }
+        }
+      }
+
+      function getStars(rating) {
+        let stars = '';
+        for (let i = 0; i < 5; i++) {
+          stars += i < rating ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        }
+        return stars;
+      }
+
+      fetchTestimonials();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="shortcut icon" href="../img/DN.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <title>DriveNShop</title>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="./comprador.html" class="logo">Drive<span>NShop</span></a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <i class="ri-menu-line"></i>
+        </div>
+        <!-- Ícones de Chat e Notificação -->
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="./anunciar.html">Anunciar</a></li>
+        <li><a href="./meus-anuncios.html">Meus Anuncios</a></li>
+        <li><a href="./propostas.html">Minhas Propostas</a></li>
+        <div class="login-container">
+          <div class="login-button">
+            <a id="login" href="./perfil.html"></a>
+          </div>
+          <ul class="dropdown">
+            <li><a id="exit" style="cursor: pointer">Sair</a></li>
+          </ul>
+        </div>
+      </ul>
+    </nav>
+    <main>
+      <div class="veiculos"></div>
+      <div
+        class="no-anuncios"
+        style="display: none; text-align: center; padding: 20px"
+      >
+        <p>Não foi possível encontrar nenhum anúncio.</p>
+      </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+      import { Marcas } from "../enum/marcas.js";
+      import { Modelos } from "../enum/modelos.js";
+      import { Estados } from "../enum/estados.js";
+      import service from "../services/veiculo.js";
+      const veiculos = document.querySelector(".veiculos");
+      const noAnuncios = document.querySelector(".no-anuncios");
+      const exit = document.getElementById("exit");
+      const user = JSON.parse(sessionStorage.getItem("userLogado"));
+      const login = document.getElementById("login");
+
+      $(document).ready(function () {
+        if (!JSON.parse(sessionStorage.getItem("userLogado"))) {
+          window.location.href = "../../index.html";
+        }
+      });
+
+      $(document).ready(function () {
+        if (user) {
+          login.innerHTML = `<img src="${user.avatar}" id="user-image"/>${user.nome}`;
+        }
+        function fetchAnuncios() {
+          service
+            .getVeiculos()
+            .then(function (data) {
+              renderAnuncios(data);
+            })
+            .catch(function (err) {
+              console.error("Erro ao buscar anuncios:", err);
+            });
+        }
+
+        function renderAnuncios(data) {
+          veiculos.innerHTML = "";
+          if (data.length === 0) {
+            noAnuncios.style.display = "block";
+          } else {
+            noAnuncios.style.display = "none";
+            data.forEach(function (veiculo) {
+              const veiculoElement = document.createElement("div");
+              veiculoElement.classList.add("veiculo");
+              veiculoElement.id = veiculo.id;
+              veiculoElement.innerHTML = `
+                    <img src="../img/veiculos/${veiculo.categoria}.png" draggable="false" />
+                    <h3>R$ ${veiculo.preco},00</h3>
+                    <p>${Modelos[veiculo.modelo]} - ${veiculo.ano}</p>
+                    <span><i class="fa fa-location-dot"></i>${Estados[veiculo.localizacao]}</span>
+                `;
+
+                veiculoElement.addEventListener("click", () => {
+                  window.location.href = `./anuncio.html?${veiculo.id}`;
+                });
+
+                if (veiculo.id_usuario !== user.id) {
+                  veiculos.appendChild(veiculoElement);
+                }
+            });
+            if (veiculos.children.length === 0) {
+              noAnuncios.style.display = "block";
+            }
+          }
+        }
+
+        fetchAnuncios();
+
+        exit.addEventListener("click", () => {
+          sessionStorage.clear();
+          window.location.href = "../../index.html";
+        });
+      });
+    </script>
+  </body>
+</html>

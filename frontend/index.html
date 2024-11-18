@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="shortcut icon" href="assets/img/DN.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <title>DriveNShop</title>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="../../index.html" class="logo">Drive<span>NShop</span></a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <i class="ri-menu-line"></i>
+        </div>
+        <!-- Barra de Pesquisa -->
+        <div class="search-bar">
+          <input type="text" placeholder="Pesquisar..." />
+          <button><i class="fa fa-search"></i></button>
+        </div>
+        <!-- Ícones de Chat e Notificação -->
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="./assets/pages/quem-somos.html">Quem Somos</a></li>
+        <li><a href="./assets/pages/saiba-mais.html">Saiba Mais</a></li>
+        <div class="login-container">
+          <div class="login-button">
+            <a id="login" style="cursor: pointer"
+              ><i class="fa-solid fa-user"></i>Perfil</a
+            >
+          </div>
+          <ul class="dropdown">
+            <li><a href="./assets/pages/login.html">Login</a></li>
+            <li><a href="./assets/pages/cadastro.html">Cadastro</a></li>
+          </ul>
+        </div>
+      </ul>
+    </nav>
+    <main>
+      <div class="veiculos"></div>
+      <div
+        class="no-anuncios"
+        style="display: none; text-align: center; padding: 20px"
+      >
+        <p>Não foi possível encontrar nenhum anúncio.</p>
+      </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+      import { Marcas } from "./assets/enum/marcas.js";
+      import { Modelos } from "./assets/enum/modelos.js";
+      import { Estados } from "./assets/enum/estados.js";
+      import service from "./assets/services/veiculo.js";
+      const veiculos = document.querySelector(".veiculos");
+      const noAnuncios = document.querySelector(".no-anuncios");
+      $(document).ready(function () {
+        function fetchAnuncios() {
+          service
+            .getVeiculos()
+            .then(function (data) {
+              renderAnuncios(data);
+            })
+            .catch(function (err) {
+              console.error("Erro ao buscar anuncios:", err);
+            });
+        }
+
+        function renderAnuncios(data) {
+          veiculos.innerHTML = "";
+          if (data.length === 0) {
+            noAnuncios.style.display = "block";
+          } else {
+            noAnuncios.style.display = "none";
+            data.forEach(function (veiculo) {
+              const veiculoElement = document.createElement("div");
+              veiculoElement.classList.add("veiculo");
+              veiculoElement.id = veiculo.id;
+              veiculoElement.innerHTML = `
+                    <img src="./assets/img/veiculos/${veiculo.categoria}.png" draggable="false" />
+                    <h3>R$ ${veiculo.preco},00</h3>
+                    <p>${Modelos[veiculo.modelo]} - ${veiculo.ano}</p>
+                    <span><i class="fa fa-location-dot"></i>${Estados[veiculo.localizacao]}</span>
+                `;
+
+                veiculoElement.addEventListener("click", () => {
+                  window.location.href = `./anuncio.html?${veiculo.id}`;
+                });
+                
+                veiculos.appendChild(veiculoElement);
+            });
+            if (veiculos.children.length === 0) {
+              noAnuncios.style.display = "block";
+            }
+          }
+        }
+
+        fetchAnuncios();
+      });
+    </script>
+  </body>
+</html>

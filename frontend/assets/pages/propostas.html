@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="shortcut icon" href="../img/DN.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../css/anuncio.css">
+  <link rel="stylesheet" href="../css/veiculos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <title>DriveNShop</title>
+</head>
+<style>
+  .propostas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .proposta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    gap: 3rem;
+  }
+
+  .proposta_veiculo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .proposta_veiculo img {
+    width: 20rem;
+    height: 20rem;
+    object-fit: cover;
+  }
+
+  .veiculo_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+  }
+
+  .proposta_body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .acoes {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .acoes button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .acoes button:hover {
+    filter: brightness(0.9);
+  }
+
+  .edit-modal {
+    display: none;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .edit-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fefefe;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    height: 75%;
+    border-radius: 0.5rem;
+  }
+
+  .edit-modal .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .edit-modal .header .close {
+    color: var(--text-dark);
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: -0.5rem;
+    cursor: pointer;
+  }
+
+  .edit-modal button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    margin-top: 1.5rem;
+  }
+</style>
+
+<body>
+  <!-- Navbar -->
+  <div class="header">
+    <div class="center-header">
+      <a href="./comprador.html" class="arrow"><i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+  </div>
+  <main style="display: block;">
+    <h1>MINHAS PROPOSTAS</h1>
+    <div class="propostas"></div>
+    <div class="no-anuncios" style="display: block; text-align: center; padding: 20px">
+      <p>Você ainda não fez nenhuma proposta.</p>
+    </div>
+  </main>
+  <div class="confirm-modal">
+    <div class="modal-content">
+      <div class="header">
+        <h2>Confirmação</h2>
+        <span id="exit-confirm" class="close">&times;</span>
+      </div>
+      <div class="confirm-content">
+        <p>Tem certeza que deseja excluir?</p>
+        <button id="confirm-yes" class="confirm">Sim</button>
+        <button id="confirm-no" class="cancel">Não</button>
+      </div>
+    </div>
+  </div>
+  <div class="edit-modal">
+    <div class="modal-content">
+      <div class="header">
+        <h2>Editar Proposta</h2>
+        <span id="exit-edit" class="close">&times;</span>
+      </div>
+      <div class="edit-content">
+        <form id="put_proposta">
+          <div class="inner__heading" id="permuta">
+            <div class="inner__title">Permuta</div>
+            <div class="inner__input">
+              <textarea></textarea>
+            </div>
+          </div>
+          <div class="inner__heading" id="valor">
+            <div class="inner__title">Valor</div>
+            <div class="inner__input">
+              <input type="text" mask="preco" maxlength="9" placeholder="R$ " />
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Telefone para Contato</div>
+            <div class="inner__input">
+              <input type="text" id="phone" mask="telefone" placeholder="(XX) XXXXX-XXXX" required />
+            </div>
+            <button id="submit-proposta" type="submit">Salvar Proposta</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+      import { Modelos } from "../enum/modelos.js";
+      import { Mascaras } from "../enum/mascaras.js";
+      import serviceProposta from "../services/proposta.js";
+      import serviceVeiculo from "../services/veiculo.js";
+      const exit = document.getElementById("exit");
+      const user = JSON.parse(sessionStorage.getItem("userLogado"));
+      const login = document.getElementById("login");
+      const exitConfirm = document.getElementById("exit-confirm");
+      const exitEdit = document.getElementById("exit-edit");
+      const editForm = document.getElementById("put_proposta");
+      const submitProposta = document.getElementById("submit-proposta");
+
+      $(document).ready(function () {
+        if (!JSON.parse(sessionStorage.getItem("userLogado"))) {
+          window.location.href = "../../index.html";
+        }
+      });
+
+      function mascararInput(input, mask) {
+        let value = input.value.replace(/\D/g, '');
+        let i = 0;
+
+        if (value === '') {
+          input.value = '';
+          return;
+        }
+
+        while (value[0] === '0') {
+          value = value.substr(1);
+        }
+
+        input.value = Mascaras[mask].replace(/#/g, function () {
+          return i < value.length ? value.charAt(i++) : '';
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll("input[mask]");
+        const condition = document.getElementById("condition");
+
+        inputs.forEach(function (input) {
+          input.addEventListener("blur", function () {
+            var mask = input.getAttribute("mask");
+            mascararInput(input, mask);
+          });
+        });
+      });
+
+      exitConfirm.onclick = function () {
+        document.querySelector(".confirm-modal").style.display = "none";
+      };
+
+      exitEdit.onclick = function () {
+        document.querySelector(".edit-modal").style.display = "none";
+      };
+
+      $(document).ready(function () {
+        function fetchPropostas() {
+          serviceVeiculo.getVeiculos()
+            .then(veiculos => {
+              serviceProposta.getPropostas()
+                .then(function (data) {
+                  renderPropostas(data, veiculos);
+                })
+                .catch(function (err) {
+                  console.error("Erro ao buscar propostas:", err);
+                });
+            })
+            .catch(function (err) {
+              console.error("Erro ao buscar veiculos:", err);
+            });
+        }
+
+        function renderPropostas(propostas, veiculos) {
+          const propostasDiv = document.querySelector(".propostas");
+          if (propostas.length === 0) {
+            document.querySelector(".no-anuncios").style.display = "block";
+          } else {
+            document.querySelector(".no-anuncios").style.display = "none";
+          }
+          propostas.forEach(proposta => {
+            const veiculo = veiculos.find(v => v.id === proposta.id_veiculo);
+            const div = document.createElement("div");
+            div.classList.add("proposta");
+            div.innerHTML = `
+              <div class="proposta_veiculo">
+                <img src="../img/veiculos/${veiculo.categoria}.png" />
+                <div class="veiculo_info">
+                  <h3>${Modelos[veiculo.modelo]}</h3>
+                  <p>${veiculo.ano}</p>
+                </div>
+              </div>
+              <div class="proposta_body">
+                <div class="info">
+                  <div class="valor">
+                    <p>Valor oferecido: R$ ${proposta.valor}</p>
+                  </div>
+                  <div class="permuta">
+                    <p>Permuta: ${proposta.permuta}</p>
+                  </div>
+                  <div class="telefone">
+                    <p>Telefone para contato: ${proposta.telefone}</p>
+                  </div>
+                </div>
+              
+                <div class="acoes">
+                  <button onclick="verProposta(${proposta.id})" style="background-color: blue">Ver Anúncio</button>
+                  <button onclick="editarProposta(${proposta.id})">Editar proposta</button>
+                  <button onclick="deletarProposta(${proposta.id})" style="background-color: red">Excluir proposta</button>
+                </div>
+              </div>
+            `;
+            div.innerHTML = `
+              <div class="proposta_veiculo">
+                <img src="../img/veiculos/${veiculo.categoria}.png" />
+                <div class="veiculo_info">
+                  <h3>${Modelos[veiculo.modelo]}</h3>
+                  <p>${veiculo.ano}</p>
+                </div>
+              </div>
+              <div class="proposta_body">
+                <div class="info">
+                  <div class="valor">
+                    <p><b>Valor oferecido:</b> R$ ${proposta.valor}</p>
+                  </div>
+                  <div class="permuta">
+                    <p><b>Permuta:</b> ${proposta.permuta}</p>
+                  </div>
+                  <div class="telefone">
+                    <p><b>Telefone para contato:</b> ${proposta.telefone}</p>
+                  </div>
+                </div>
+              
+                <div class="acoes">
+                  <button onclick="verAnuncio(${veiculo.id})" style="background-color: blue">Ver Anúncio</button>
+                  <button onclick="editarProposta(${proposta.id})">Editar proposta</button>
+                  <button onclick="excluirProposta(${proposta.id})" style="background-color: red">Excluir proposta</button>
+                </div>
+              </div>
+            `;
+            if (user.id === proposta.id_usuario) {
+              propostasDiv.appendChild(div);
+            }
+          });
+
+          if (propostasDiv.children.length === 0) {
+            document.querySelector(".no-anuncios").style.display = "block";
+          }
+        }
+
+        window.verAnuncio = function (id) {
+          window.location.href = `./anuncio.html?${id}`;
+        };
+
+        window.editarProposta = function (id) {
+          document.querySelector(".edit-modal").style.display = "flex";
+
+          serviceProposta
+          .getProposta(id)
+          .then(function (data) {
+            editForm.querySelector("#permuta textarea").value = data.permuta === "Nenhuma" ? "" : data.permuta;
+            editForm.querySelector("#valor input").value = data.valor === "0" ? "" : data.valor;
+            editForm.querySelector("#phone").value = data.telefone;
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar anuncio:", err);
+          });
+
+          editForm.onsubmit = function (e) {
+            e.preventDefault();
+            const proposta = {
+              permuta: editForm.querySelector("#permuta textarea").value || "Nenhuma",
+              valor: editForm.querySelector("#valor input").value.replace(/\D/g, '') || "0",
+              telefone: editForm.querySelector("#phone").value,
+              id_veiculo: id,
+              id_usuario: user.id
+            };
+
+            submitProposta.disabled = true;
+            submitProposta.innerHTML = "Salvando...";
+
+            serviceProposta
+              .updateProposta(id, proposta)
+              .then(function (data) {
+                window.location.reload();
+              })
+              .catch(function (err) {
+                console.error("Erro ao editar proposta:", err);
+              });
+          };
+        };
+
+        window.excluirProposta = function (id) {
+          document.querySelector(".confirm-modal").style.display = "flex";
+          document.getElementById("confirm-yes").onclick = function () {
+            serviceProposta
+            .deleteProposta(id)
+            .then(() => {
+                alert("Proposta excluída com sucesso!");
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.error("Erro ao excluir proposta:", err);
+                alert("Erro ao excluir proposta. Por favor, tente novamente.");
+            });
+          };
+
+          document.getElementById("confirm-no").onclick = function () {
+            document.querySelector(".confirm-modal").style.display = "none";
+          };
+        };
+
+        fetchPropostas();
+      });
+    </script>
+</body>
+
+</html>

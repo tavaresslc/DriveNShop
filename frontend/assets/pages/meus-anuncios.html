@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/anuncio.css">
+  <link rel="stylesheet" href="../css/veiculos.css">
+  <link rel="stylesheet" href="../css/meus-anuncios.css">
+  <link rel="shortcut icon" href="../img/DN.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <title>DriveNShop</title>
+</head>
+
+<style>
+  .propostas {
+    display: flex;
+    flex-direction: column;
+    max-height: 30rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) #f1f1f1;
+  }
+
+  .propostas::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .propostas::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .propostas::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+  }
+
+  .propostas::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  .proposta {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .proposta .proposta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .proposta .user-info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .proposta .user-info h4 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+
+  .proposta .user-info p {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+  }
+
+  .proposta p {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+  }
+</style>
+
+<body>
+  <!-- Navbar -->
+  <div class="header">
+    <div class="center-header">
+      <a href="./comprador.html" class="arrow"><i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+  </div>
+  <main style="display: block;">
+    <h1>MEUS ANÚNCIOS</h1>
+    <div class="anuncios"></div>
+    <div class="no-anuncios" style="display: block; text-align: center; padding: 20px">
+      <p>Você ainda não criou nenhum anúncio.</p>
+    </div>
+  </main>
+  <div class="proposta-modal">
+    <div class="modal-content">
+      <div class="header">
+        <h2>Propostas</h2>
+        <span id="exit-propostas" class="close">&times;</span>
+      </div>
+      <div class="propostas"></div>
+      <div class="no-propostas" style="display: block; text-align: center; padding: 20px">
+        <p>Esse anúncio ainda não recebeu nenhuma proposta.</p>
+      </div>
+    </div>
+  </div>
+  <div class="edit-modal">
+    <form id="put_form">
+      <div class="modal-content">
+        <div class="left">
+          <h2>Editar Anúncio</h2>
+          <div class="inner__heading">
+            <div class="inner__title">Categoria</div>
+            <div class="inner__input">
+              <select name="facing" id="category" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Marca</div>
+            <div class="inner__input">
+              <select name="facing" id="brand" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Modelo</div>
+            <div class="inner__input">
+              <select name="facing" id="model" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Ano</div>
+            <div class="inner__input">
+              <input type="number" min="1900" max="2099" id="year" maxlength="4" step="1"
+                placeholder="Infome o ano do veículo" required />
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Preço</div>
+            <div class="inner__input">
+              <input type="text" id="price" mask="preco" maxlength="9" placeholder="R$ " required />
+            </div>
+          </div>
+        </div>
+        <div class="rigth">
+          <span id="exit-edit" class="close">&times;</span>
+          <div class="inner__heading">
+            <div class="inner__title">Condição</div>
+            <div class="inner__input">
+              <select name="facing" id="condition" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+                <option value="0">Novo</option>
+                <option value="1">Usado</option>
+              </select>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Quilometragem do veículo</div>
+            <div class="inner__input">
+              <input type="text" id="kms" mask="quilometragem" placeholder="KM" required />
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Localização</div>
+            <div class="inner__input">
+              <select name="facing" id="location" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Descrição</div>
+            <div class="inner__input">
+              <textarea id="desc" minlength="10" required></textarea>
+            </div>
+          </div>
+          <div class="inner__heading">
+            <div class="inner__title">Tipo de Anúncio</div>
+            <div class="inner__input">
+              <select name="facing" id="type" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+                <option value="0">Venda</option>
+                <option value="1">Troca</option>
+              </select>
+            </div>
+          </div>
+          <button id="put_btn" type="submit" class="btn">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="confirm-modal">
+    <div class="modal-content">
+      <div class="header">
+        <h2>Confirmação</h2>
+        <span id="exit-confirm" class="close">&times;</span>
+      </div>
+      <div class="confirm-content">
+        <p>Tem certeza que deseja excluir?</p>
+        <button id="confirm-yes" class="confirm">Sim</button>
+        <button id="confirm-no" class="cancel">Não</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="module" src="../js/meus-anuncios.js"></script>
+  <script type="module">
+    import { Marcas } from "../enum/marcas.js";
+    import { Estados } from "../enum/estados.js";
+    import { Modelos } from "../enum/modelos.js";
+    import { Categorias } from "../enum/categorias.js";
+    import service from "../services/veiculo.js";
+    import serviceProposta from "../services/proposta.js";
+    import serviceUsers from "../services/user.js";
+    const veiculos = document.querySelector(".anuncios");
+    const noAnuncios = document.querySelector(".no-anuncios");
+    const noPropostas = document.querySelector(".no-propostas");
+    const exitEdit = document.getElementById("exit-edit");
+    const exitPropostas = document.getElementById("exit-propostas");
+    const exitConfirm = document.getElementById("exit-confirm");
+    const user = JSON.parse(sessionStorage.getItem("userLogado"));
+    const login = document.getElementById("login");
+
+    $(document).ready(function () {
+      if (!JSON.parse(sessionStorage.getItem("userLogado"))) {
+        window.location.href = "../../index.html";
+      }
+    });
+
+    exitConfirm.onclick = function () {
+      document.querySelector(".confirm-modal").style.display = "none";
+    }
+
+    exitEdit.onclick = function () {
+      document.querySelector(".edit-modal").style.display = "none";
+      sessionStorage.removeItem("idVeiculo");
+    }
+
+    exitPropostas.onclick = function () {
+      document.querySelector(".proposta-modal").style.display = "none";
+      sessionStorage.removeItem("idVeiculo");
+    }
+
+    window.excluirAnuncio = function (id) {
+      document.querySelector(".confirm-modal").style.display = "flex";
+      document.getElementById("confirm-yes").onclick = function () {
+        service
+          .deleteVeiculo(id)
+          .then(() => {
+            alert("Veículo excluído com sucesso!");
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.error("Erro ao excluir anuncio:", err);
+            alert("Erro ao excluir o veículo. Por favor, tente novamente.");
+          });
+      };
+
+      document.getElementById("confirm-no").onclick = function () {
+        document.querySelector(".confirm-modal").style.display = "none";
+      };
+    };
+
+    window.editarAnuncio = function (id) {
+      document.querySelector(".edit-modal").style.display = "flex";
+      service
+        .getVeiculo(id)
+        .then(function (data) {
+          document.getElementById("category").value = data.categoria;
+          document.getElementById("brand").value = data.marca;
+          document.getElementById("model").value = data.modelo;
+          document.getElementById("year").value = data.ano;
+          document.getElementById("price").value = data.preco;
+          document.getElementById("condition").value = data.condicao;
+          document.getElementById("kms").value = data.quilometragem;
+          document.getElementById("location").value = data.localizacao;
+          document.getElementById("desc").value = data.descricao;
+          document.getElementById("type").value = data.tipo;
+        })
+        .catch(function (err) {
+          console.error("Erro ao buscar anuncio:", err);
+        });
+      sessionStorage.setItem("idVeiculo", id);
+    };
+
+    $(document).ready(function () {
+
+      function fetchAnuncios() {
+        service
+          .getVeiculos()
+          .then(function (data) {
+            renderAnuncios(data);
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar anuncios:", err);
+          });
+      }
+
+      function renderAnuncios(data) {
+        veiculos.innerHTML = "";
+        if (data.length === 0) {
+          noAnuncios.style.display = "block";
+        } else {
+          data.forEach(function (veiculo) {
+            const veiculoElement = document.createElement("div");
+            veiculoElement.classList.add("veiculo");
+            veiculoElement.innerHTML = `
+                    <h3>${veiculo.tipo ? 'Troca' : 'Venda'} de ${Categorias[veiculo.categoria]}</h3>
+                    <img src="../img/veiculos/${veiculo.categoria}.png" alt="${Categorias[veiculo.categoria]}" draggable="false" />
+                    <div><h4>R$ ${veiculo.preco},00</h4><br><i class="fa fa-location-dot"></i>${Estados[veiculo.localizacao]}</div>
+
+                    <br>
+                    <div class="legenda">
+                      <div class="info">
+                          <p>${Marcas[veiculo.marca]}</p>
+                          <hr>
+                          <p>${Modelos[veiculo.modelo]}</p>
+                          <hr>
+                          <p>${veiculo.ano}</p>
+                          <hr>
+                          <p>${veiculo.condicao ? 'Usado' : 'Novo'} (${veiculo.quilometragem} KM)</p>
+                      </div>
+                      <div class="acoes">
+                        <button style="background-color: blue" class="btn-propostas" onclick="verPropostas(${veiculo.id})">Ver Propostas</button>
+                        <button class="btn-editar" onclick="editarAnuncio(${veiculo.id})">Editar</button>
+                        <button style="background-color: red" class="btn-excluir" onclick="excluirAnuncio(${veiculo.id})">Excluir</button>
+                      </div>
+                    </div>
+                    <br>
+                    <p>${veiculo.descricao}</p>
+                `;
+            if (veiculo.id_usuario === user.id) {
+              veiculos.appendChild(veiculoElement);
+              noAnuncios.style.display = "none";
+            }
+          });
+        }
+      }
+
+      fetchAnuncios();
+    });
+
+    $(document).ready(function () {
+
+      function fetchPropostas() {
+        serviceUsers
+          .getUsers()
+          .then(users => {
+            serviceProposta
+              .getPropostas()
+              .then(function (data) {
+                renderPropostas(data, users);
+              })
+              .catch(function (err) {
+                console.error("Erro ao buscar propostas:", err);
+              });
+          })
+          .catch(function (err) {
+            console.error("Erro ao buscar usuários:", err);
+          });
+      }
+
+      function renderPropostas(data, users) {
+        const propostas = document.querySelector(".propostas");
+        propostas.innerHTML = "";
+        if (data.length === 0) {
+          noPropostas.style.display = "block";
+        } else {
+          data.forEach(function (proposta) {
+            let userName, userEmail;
+            users.forEach(user => {
+              if (proposta.id_usuario === user.id) {
+                userName = user.nome;
+                userEmail = user.email;
+              }
+            });
+            const propostaElement = document.createElement("div");
+            propostaElement.classList.add("proposta");
+            propostaElement.innerHTML = `
+                    <div class="proposta-info">
+                      <div class="user-info">
+                        <h4>${userName}</h4>
+                        <p>${userEmail}</p>
+                      </div>
+                      <p><b>Valor oferecido: </b>R$ ${proposta.valor},00</p>
+                      <p><b>Permuta: </b>${proposta.permuta}</p>
+                      <p><b>Telefone para contato: </b>${proposta.telefone}</p>
+                    </div>
+                `;
+            if (proposta.id_veiculo === parseInt(sessionStorage.getItem("idVeiculo"))) {
+              
+              propostas.appendChild(propostaElement);
+              noPropostas.style.display = "none";
+            }
+          });
+        }
+
+        if (propostas.innerHTML === "") {
+          noPropostas.style.display = "block";
+        }
+      }
+
+      window.verPropostas = function (id) {
+        document.querySelector(".proposta-modal").style.display = "flex";
+        fetchPropostas();
+        sessionStorage.setItem("idVeiculo", id);
+      };
+    });
+  </script>
+</body>
+
+</html>

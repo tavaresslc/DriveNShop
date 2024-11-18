@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/veiculos.css">
+    <link rel="shortcut icon" href="../img/DN.png" type="image/x-icon" />
+    <title>DriveNShop</title>
+    <script
+      src="https://kit.fontawesome.com/f584623432.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <!--       --------Header part---------         -->
+    <div class="header">
+      <div class="center-header">
+        <a href="./comprador.html" class="arrow"
+          ><i class="fa-solid fa-arrow-left"></i
+        ></a>
+      </div>
+    </div>
+
+    <div style="margin: 1rem 0;" class="post">
+      <h1>Publique seu Anúncio</h1>
+    </div>
+
+    <div class="main">
+      <h3>Categorias de Anúncios</h3>
+
+      <form action="" id="post_form">
+        <div class="main__inner">
+          <div class="inner__heading">
+            <div class="inner__title">Categoria</div>
+            <div class="inner__input">
+              <select name="facing" id="category" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="inner__heading">
+            <div class="inner__title">Tipo de Anúncio</div>
+            <div class="inner__input">
+              <select name="facing" id="type" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+                <option value="0">Venda</option>
+                <option value="1">Troca</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="inner__heading">
+            <div class="inner__title">Condição</div>
+            <div class="inner__input">
+              <select name="facing" id="condition" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+                <option value="0">Novo</option>
+                <option value="1">Usado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <h3 class="innertext">INCLUA OS DETALHES</h3>
+
+        <br>
+
+        <div class="main__inner">
+          <div class="inner__heading">
+            <div class="inner__title">Marca</div>
+            <div class="inner__input">
+              <select name="facing" id="brand" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="inner__heading">
+            <div class="inner__title">Modelo</div>
+            <div class="inner__input">
+              <select name="facing" id="model" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="inner__heading">
+            <div class="inner__title">Ano</div>
+            <div class="inner__input">
+              <input type="number" min="1900" max="2099" id="year" maxlength="4" step="1" placeholder="Infome o ano do veículo" required/>
+            </div>
+            <p>Ano é obrigatório. Por favor, preencha o campo obrigatório.</p>
+          </div>
+
+          <br>
+
+          <div class="inner__heading">
+            <div class="inner__title">Quilometragem do veículo</div>
+            <div class="inner__input">
+              <input type="text" id="kms" mask="quilometragem" placeholder="KM" required/>
+            </div>
+            <p>
+              KM dirigido é obrigatório. Por favor, preencha o campo obrigatório.
+            </p>
+          </div>
+
+          <br>
+
+          <div class="inner__heading">
+            <div class="inner__title">Descrição</div>
+            <div class="inner__input">
+              <textarea id="desc" minlength="10" required></textarea>
+            </div>
+            <p>
+              É necessário um comprimento mínimo de 10 caracteres. Por favor,
+              edite o campo.
+            </p>
+          </div>
+
+          <br>
+
+          <hr />
+
+          <h3 class="innertext">DEFINA UM PREÇO</h3>
+
+          <div class="inner__heading">
+            <div class="inner__title">Preço</div>
+            <div class="inner__input">
+              <input type="text" id="price" mask="preco" maxlength="9" placeholder="R$ " required/>
+            </div>
+          </div>
+
+          <hr />
+
+          <h3 class="innertext">Localização</h3>
+
+          <div class="inner__heading">
+            <div class="inner__title">Estado</div>
+            <div class="inner__input">
+              <select name="facing" id="location" required>
+                <option value="" selected disabled hidden>Selecionar</option>
+              </select>
+            </div>
+          </div>
+
+          <hr />
+
+          <button id="post_btn" type="submit" style="cursor: pointer;">Postar Agora</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <script type="module" src="../js/anuncio.js"></script>
+    <script type="module">
+      $(document).ready(function () {
+        if (!JSON.parse(sessionStorage.getItem("userLogado"))) {
+          window.location.href = "../../index.html";
+        }
+      });
+    </script>
+  </body>
+</html>
